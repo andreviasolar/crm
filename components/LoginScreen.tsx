@@ -94,7 +94,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                                 </div>
                                 <Input 
                                     name="instanceName" 
-                                    placeholder="Nome da Instância" 
+                                    placeholder="Usuário" 
                                     value={formData.instanceName} 
                                     onChange={handleChange}
                                     className="h-12 pl-11 !rounded-xl border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/5 text-gray-900 dark:text-white placeholder:text-gray-500 focus:border-green-500/50 focus:ring-green-500/20 transition-all hover:bg-white/50 dark:hover:bg-white/10"
@@ -110,7 +110,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
                                 <Input 
                                     name="apiKey" 
                                     type="password" 
-                                    placeholder="API Key Global" 
+                                    placeholder="Senha" 
                                     value={formData.apiKey} 
                                     onChange={handleChange} 
                                     className="h-12 pl-11 !rounded-xl border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/5 text-gray-900 dark:text-white placeholder:text-gray-500 focus:border-green-500/50 focus:ring-green-500/20 transition-all hover:bg-white/50 dark:hover:bg-white/10"
