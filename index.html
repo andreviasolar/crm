@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evolution Chat CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              border: "hsl(var(--border))",
+              input: "hsl(var(--input))",
+              ring: "hsl(var(--ring))",
+              background: "hsl(var(--background))",
+              foreground: "hsl(var(--foreground))",
+              primary: {
+                DEFAULT: "hsl(var(--primary))",
+                foreground: "hsl(var(--primary-foreground))",
+              },
+              secondary: {
+                DEFAULT: "hsl(var(--secondary))",
+                foreground: "hsl(var(--secondary-foreground))",
+              },
+              muted: {
+                DEFAULT: "hsl(var(--muted))",
+                foreground: "hsl(var(--muted-foreground))",
+              },
+              accent: {
+                DEFAULT: "hsl(var(--accent))",
+                foreground: "hsl(var(--accent-foreground))",
+              },
+              card: {
+                DEFAULT: "hsl(var(--card))",
+                foreground: "hsl(var(--card-foreground))",
+              },
+              // WhatsApp Specific Colors
+              wa: {
+                teal: "#008069",
+                light: "#25D366",
+                beige: "#efeae2",
+                dark: "#111b21",
+                darkPaper: "#0b141a",
+                messageOutLight: "#d9fdd3",
+                messageOutDark: "#005c4b",
+                headerLight: "#f0f2f5",
+                headerDark: "#202c33",
+              }
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      :root {
+        /* WhatsApp Web Light Theme Palette */
+        --background: 210 20% 98%; /* Light gray background usually behind the app container */
+        --foreground: 202 24% 9%;
+        
+        --card: 0 0% 100%;
+        --card-foreground: 202 24% 9%;
+        
+        --popover: 0 0% 100%;
+        --popover-foreground: 202 24% 9%;
+        
+        /* WhatsApp Teal Primary */
+        --primary: 167 100% 33%; /* #00a884 */
+        --primary-foreground: 0 0% 100%;
+        
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+        
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+        
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+        
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+        
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 167 100% 33%;
+        
+        --radius: 0.5rem;
+      }
+
+      .dark {
+        /* WhatsApp Web Dark Theme Palette */
+        --background: 204 22% 9%; /* #111b21 Main Dark Background */
+        --foreground: 210 9% 92%;
+        
+        --card: 203 22% 16%; /* #202c33 Headers and Sidebars */
+        --card-foreground: 210 9% 92%;
+        
+        --popover: 203 22% 16%;
+        --popover-foreground: 210 9% 92%;
+        
+        --primary: 167 100% 33%; /* Keep the brand green */
+        --primary-foreground: 0 0% 100%;
+        
+        --secondary: 203 22% 16%;
+        --secondary-foreground: 210 9% 92%;
+        
+        --muted: 203 22% 20%;
+        --muted-foreground: 215 20.2% 65.1%;
+        
+        --accent: 203 22% 20%;
+        --accent-foreground: 210 9% 92%;
+        
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
+        
+        --border: 203 22% 20%; /* Darker borders */
+        --input: 203 22% 16%;
+        --ring: 167 80% 40%;
+      }
+
+      /* Custom Scrollbar Styles to match theme */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: hsl(var(--muted-foreground) / 0.3);
+        border-radius: 9999px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: hsl(var(--muted-foreground) / 0.5);
+      }
+
+      /* Firefox */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "axios": "https://aistudiocdn.com/axios@^1.13.2",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react-hot-toast": "https://aistudiocdn.com/react-hot-toast@^2.6.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-background text-foreground antialiased font-sans overflow-hidden">
+    <div id="root"></div>
+  </body>
+</html>
