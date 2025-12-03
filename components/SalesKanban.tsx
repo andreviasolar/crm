@@ -208,9 +208,41 @@ const EditLeadModal = ({ lead, onClose, onSave }: { lead: Deal, onClose: () => v
         ...lead,
         tags: lead.tags || [] 
     });
+    const [loadingCep, setLoadingCep] = useState(false);
 
     const handleChange = (field: keyof Deal, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const rawValue = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+        handleChange('zipCode', rawValue);
+
+        if (rawValue.length === 8) {
+            setLoadingCep(true);
+            try {
+                // Utilizando GET conforme padrão da ViaCEP
+                const response = await axios.get(`https://viacep.com.br/ws/${rawValue}/json/`);
+                
+                if (response.data && !response.data.erro) {
+                    setFormData(prev => ({
+                        ...prev,
+                        address: response.data.logradouro,
+                        neighborhood: response.data.bairro,
+                        // Você pode concatenar a cidade/UF no endereço se desejar, mas vamos preencher os campos mapeados
+                        // Se quiser salvar Cidade/UF, teria que adicionar esses campos ao tipo Deal
+                    }));
+                    toast.success("Endereço localizado!");
+                } else {
+                    toast.error("CEP não encontrado.");
+                }
+            } catch (error) {
+                console.error("Erro ao buscar CEP:", error);
+                toast.error("Erro ao consultar CEP.");
+            } finally {
+                setLoadingCep(false);
+            }
+        }
     };
 
     const toggleTag = (tag: string) => {
@@ -321,9 +353,24 @@ const EditLeadModal = ({ lead, onClose, onSave }: { lead: Deal, onClose: () => v
                         </div>
                     </div>
 
-                    {/* Linha 3: Endereço e Bairro */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1">
+                    {/* Linha 3: CEP e Endereço */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                         <div className="space-y-1 md:col-span-1">
+                            <label className="text-xs font-semibold text-[#54656f] dark:text-[#8696a0] uppercase">CEP</label>
+                            <div className="relative">
+                                <div className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground flex items-center justify-center">
+                                    {loadingCep ? <Loader2 className="h-3 w-3 animate-spin" /> : <Hash className="h-3 w-3" />}
+                                </div>
+                                <Input 
+                                    className="pl-9"
+                                    value={formData.zipCode || ''} 
+                                    onChange={handleCepChange} 
+                                    placeholder="00000000"
+                                    maxLength={8}
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-1 md:col-span-2">
                             <label className="text-xs font-semibold text-[#54656f] dark:text-[#8696a0] uppercase">Endereço</label>
                             <div className="relative">
                                 <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -335,29 +382,17 @@ const EditLeadModal = ({ lead, onClose, onSave }: { lead: Deal, onClose: () => v
                                 />
                             </div>
                         </div>
-                        <div className="space-y-1">
+                    </div>
+
+                    {/* Linha 4: Bairro e Origem (Moved Neighborhood to own row or combined) */}
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <div className="space-y-1">
                             <label className="text-xs font-semibold text-[#54656f] dark:text-[#8696a0] uppercase">Bairro</label>
                             <Input 
                                 value={formData.neighborhood || ''} 
                                 onChange={(e) => handleChange('neighborhood', e.target.value)} 
                                 placeholder="Bairro"
                             />
-                        </div>
-                    </div>
-
-                    {/* Linha 4: Etapa e Origem */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                            <label className="text-xs font-semibold text-[#54656f] dark:text-[#8696a0] uppercase">Etapa</label>
-                            <select 
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                                value={formData.status}
-                                onChange={(e) => handleChange('status', e.target.value)}
-                            >
-                                {COLUMNS.map(col => (
-                                    <option key={col.id} value={col.id}>{col.title}</option>
-                                ))}
-                            </select>
                         </div>
                         <div className="space-y-1">
                             <label className="text-xs font-semibold text-[#54656f] dark:text-[#8696a0] uppercase">Origem</label>
@@ -373,9 +408,21 @@ const EditLeadModal = ({ lead, onClose, onSave }: { lead: Deal, onClose: () => v
                         </div>
                     </div>
 
-                    {/* Linha 5: Valor Médio e Checkbox Orçamento */}
+                    {/* Linha 5: Etapa e Valor Médio */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
+                            <label className="text-xs font-semibold text-[#54656f] dark:text-[#8696a0] uppercase">Etapa</label>
+                            <select 
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                value={formData.status}
+                                onChange={(e) => handleChange('status', e.target.value)}
+                            >
+                                {COLUMNS.map(col => (
+                                    <option key={col.id} value={col.id}>{col.title}</option>
+                                ))}
+                            </select>
+                        </div>
+                         <div className="space-y-1">
                             <label className="text-xs font-semibold text-[#54656f] dark:text-[#8696a0] uppercase">Valor Médio da Conta</label>
                              <div className="relative">
                                 <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -387,19 +434,21 @@ const EditLeadModal = ({ lead, onClose, onSave }: { lead: Deal, onClose: () => v
                                 />
                             </div>
                         </div>
-                        <div className="flex items-center gap-2 pt-6">
-                            <input 
-                                type="checkbox" 
-                                id="budgetPresented"
-                                className="w-5 h-5 accent-[#00a884] rounded border-gray-300"
-                                checked={formData.budgetPresented || false}
-                                onChange={(e) => handleChange('budgetPresented', e.target.checked)}
-                            />
-                            <label htmlFor="budgetPresented" className="text-sm font-medium text-[#111b21] dark:text-[#e9edef]">Orçamento Apresentado?</label>
-                        </div>
                     </div>
 
-                    {/* Linha 6: Observações */}
+                    {/* Linha 6: Checkbox Orçamento */}
+                     <div className="flex items-center gap-2 pt-2">
+                        <input 
+                            type="checkbox" 
+                            id="budgetPresented"
+                            className="w-5 h-5 accent-[#00a884] rounded border-gray-300"
+                            checked={formData.budgetPresented || false}
+                            onChange={(e) => handleChange('budgetPresented', e.target.checked)}
+                        />
+                        <label htmlFor="budgetPresented" className="text-sm font-medium text-[#111b21] dark:text-[#e9edef]">Orçamento Apresentado?</label>
+                    </div>
+
+                    {/* Linha 7: Observações */}
                     <div className="space-y-1">
                         <label className="text-xs font-semibold text-[#54656f] dark:text-[#8696a0] uppercase">Observações</label>
                         <textarea 

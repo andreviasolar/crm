@@ -53,6 +53,7 @@ export interface Deal {
   
   // Novos Campos Solicitados
   email?: string;
+  zipCode?: string; // CEP
   address?: string; // Endereço
   neighborhood?: string; // Bairro
   source?: string; // Origem
